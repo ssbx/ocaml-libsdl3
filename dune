@@ -1,0 +1,48 @@
+(include_subdirs unqualified)
+
+(rule
+ (targets c_flags.sexp)
+  (action
+ (with-stdout-to c_flags.sexp
+    (system "echo -n '('; pkg-config --cflags sdl3; echo -n ')'"))))
+
+(rule
+ (targets c_library.sexp)
+  (action
+ (with-stdout-to c_library.sexp
+    (system "echo -n '('; pkg-config --libs sdl3; echo -n ')'"))))
+
+(library
+ (public_name libsdl3)
+ (name SDL3)
+ (modes native)
+ (public_headers (glob_files OcamlSDL3/*.h))
+ (foreign_stubs
+  (language c)
+  (names
+    rect_stub
+    cpuinfo_stub
+    blendmode_stub
+    clipboard_stub
+    error_stub
+    filesystem_stub
+    joystick_stub
+;;    keyboard_stub
+;;    pixel_stub
+;;     hints_stub
+;;     keycode_stub
+;;     surface_stub
+;;     init_stub
+;;     timer_stub
+;;     events_stub
+;;     version_stub
+;;     render_stub
+;;     rwops_stub
+;;     power_stub
+;;     mouse_stub
+;;     audio_stub
+;;     video_stub
+;;     platform_stub
+     )
+   (flags :standard (:include c_flags.sexp)))
+  (c_library_flags (:include c_library.sexp)))
